@@ -8,12 +8,20 @@ enum AUTON {MOVING, ROTATING}
 # var a = 2
 # var b = "text"
 
+
 var auton_state = AUTON.ROTATING
 var target_angle: float = 0
 var target_location: Vector2 = Vector2(0, 0)
 
 export var speed: float = 30 # inches per second
 export(STATES) var state = STATES.OP_CONTROL
+
+# auton variables
+var current_auton_index: int = -1
+var start_position: Vector2 = Vector2(0, 0)
+var start_rotation: float = 0
+var current_auton_path = []
+var start_speed: float = 0
 
 
 # Called when the node enters the scene tree for the first time.
@@ -23,7 +31,8 @@ func _ready():
 	
 func clamp360(angle: float) -> float:
 	return fmod(angle + 360, 360)
-	
+func vector_within(v: Vector2, t: Vector2, i: int):
+	return v.x + i > t.x and v.y + i > t.y and v.x - i < t.x and v.y - 1 < t.y
 
 func teleport_to(pos: Vector2, angle: float = 0):
 	state = STATES.TELEPORTING
@@ -33,16 +42,31 @@ func teleport_to(pos: Vector2, angle: float = 0):
 func auton_to(pos: Vector2):
 	state = STATES.AUTON
 	auton_state = AUTON.ROTATING
+	pos.y *= -1
+	pos = pos.rotated(start_rotation) + start_position
 	target_location = pos
-	target_angle = asin((position.x - pos.x) / (position - pos).length())
+	var distance := (position - pos).length()
+	target_angle = rotation
+	if distance != 0:
+		target_angle = asin((position.x - pos.x) / distance)
 	target_angle = rad2deg(target_angle)
-	print("before transflorm: ", target_angle)
 	if (position - pos).y < 0:
-		print("not adding 180 lol")
 		target_angle *= -1
+		print("added 180")
 		target_angle += 180
 	target_angle = clamp360(target_angle)
-	print("final target: ", target_angle)
+	print("current angle: ", clamp360(rotation_degrees))
+	print("target angle: ", target_angle)
+	print("target position: ", pos)
+
+func play_auton():
+	start_position = position
+	start_rotation = rotation
+	current_auton_index = 0
+	current_auton_path = AutonPath.get_current_path()
+	start_speed = speed
+	speed = current_auton_path[0].speed
+	auton_to(current_auton_path[0].pos)
 
 func move_by_wheels(left: float, right: float):
 	left /= 10
@@ -72,20 +96,24 @@ func _process(delta):
 			right_speed += 1
 			left_speed -= 1
 		
+		if Input.is_action_just_pressed("space"):
+			play_auton()
+		
 		move_by_wheels(left_speed, right_speed)
 	
 	if state == STATES.TELEPORTING:
 		rotation_degrees = lerp(rotation_degrees, target_angle, 0.4)
 		position = lerp(position, target_location, 0.4)
 		
-		if position == target_location and rotation_degrees == target_angle:
+		if vector_within(position, target_location, 1) and rotation_degrees + 1 > target_angle and rotation_degrees - 1 < target_angle:
+			rotation_degrees = target_angle
+			position = target_location
 			state = STATES.OP_CONTROL
 	
 	if state == STATES.AUTON: # this is one of the rare moments where the code on the actual robot will be much cleaner than the godot code
 		if auton_state == AUTON.ROTATING:
-			var r = clamp360(rotation_degrees * -1) # equivalent to imu_get_heading()
-			print(r)
-			if r + 5 > target_angle and r - 5 < target_angle:
+			var r = clamp360(-rotation_degrees) # equivalent to imu_get_heading()
+			if r + 2 > target_angle and r - 2 < target_angle:
 				auton_state = AUTON.MOVING
 				print("rotation done")
 			else:
@@ -96,9 +124,19 @@ func _process(delta):
 					left_speed += 1
 					right_speed -= 1
 		elif auton_state == AUTON.MOVING:
-			if position + Vector2(2, 2) > target_location and position - Vector2(2, 2) < target_location:
-				state = STATES.OP_CONTROL # TODO: actual playback with more than one step
+			if vector_within(position, target_location, 2):
+				print("position: ", position)
+				print("target: ", target_location)
+				print("error: ", position - target_location)
 				print("move done")
+				if current_auton_index != -1:
+					current_auton_index += 1
+					if current_auton_path.size() == current_auton_index:
+						state = STATES.OP_CONTROL
+						speed = start_speed
+						return
+					speed = current_auton_path[current_auton_index].speed
+					auton_to(current_auton_path[current_auton_index].pos)
 			else:
 				left_speed = 1
 				right_speed = 1

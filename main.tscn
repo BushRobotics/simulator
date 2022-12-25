@@ -14,7 +14,8 @@ zoom = Vector2( 0.27, 0.27 )
 [node name="Field" parent="." instance=ExtResource( 1 )]
 
 [node name="Robot" parent="." instance=ExtResource( 2 )]
-position = Vector2( 12, 60 )
+position = Vector2( -61, -36 )
+rotation = 1.5708
 
 [node name="LEFT" type="Position2D" parent="."]
 position = Vector2( 12, 60 )
