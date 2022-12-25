@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://textures/disk.png" type="Texture" id=1]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 2.76
+
+[node name="Disk" type="RigidBody2D"]
+sleeping = true
+linear_damp = 30.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[node name="Disk" type="Sprite" parent="."]
+scale = Vector2( 0.22, 0.22 )
+texture = ExtResource( 1 )
