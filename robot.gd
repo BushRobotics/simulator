@@ -46,7 +46,7 @@ func auton_to(pos: Vector2):
 	pos = pos.rotated(start_rotation) + start_position
 	target_location = pos
 	var distance := (position - pos).length()
-	target_angle = rotation
+	target_angle = -rotation
 	if distance != 0:
 		target_angle = asin((position.x - pos.x) / distance)
 	target_angle = rad2deg(target_angle)
@@ -113,6 +113,7 @@ func _process(delta):
 	if state == STATES.AUTON: # this is one of the rare moments where the code on the actual robot will be much cleaner than the godot code
 		if auton_state == AUTON.ROTATING:
 			var r = clamp360(-rotation_degrees) # equivalent to imu_get_heading()
+			#print(r)
 			if r + 2 > target_angle and r - 2 < target_angle:
 				auton_state = AUTON.MOVING
 				print("rotation done")
