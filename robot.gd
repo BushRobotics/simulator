@@ -20,7 +20,7 @@ export(STATES) var state = STATES.TELEPORTING
 func _ready():
 	pass # Replace with function body.
 
-func teleport_to(pos: Vector2, angle: float = 90):
+func teleport_to(pos: Vector2, angle: float = 0):
 	state = STATES.TELEPORTING
 	target_angle = angle
 	target_location = pos
