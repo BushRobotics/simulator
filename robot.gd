@@ -4,34 +4,40 @@ extends KinematicBody2D
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
-export var left_speed = 0.1
-export var right_speed = 0.1
-var fac = 0.001
+
+export var speed = 3
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.
 
+func move_by_wheels(left: float, right: float):
+	var move_speed = (left + right) / 2 
+	var theta = asin(left - right) / 10 * speed
+	rotation += theta
+	move_and_slide(Vector2(0, move_speed).rotated(rotation) * -100 * speed)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	if Input.is_action_pressed("left_down"):
-		left_speed -= fac
-	if Input.is_action_pressed("left_up"):
-		left_speed += fac
+	var left_speed: float = 0
+	var right_speed: float = 0
+	
+	if Input.is_action_pressed("up"):
+		left_speed += 1
+		right_speed += 1
+	if Input.is_action_pressed("down"):
+		left_speed -= 1
+		right_speed -= 1
 		
-	if Input.is_action_pressed("right_down"):
-		right_speed -= fac
-	if Input.is_action_pressed("right_up"):
-		right_speed += fac
-		
-	var theta = asin(left_speed - right_speed)
+	if Input.is_action_pressed("right"):
+		right_speed -= 1
+		left_speed += 1
+	if Input.is_action_pressed("left"):
+		right_speed += 1
+		left_speed -= 1
 	
-	rotation += theta
+	move_by_wheels(left_speed / 10, right_speed / 10)
 	
-	position += Vector2(0, (left_speed + right_speed / 2)).rotated(rotation) * -1
-	
-	print("left speed:", left_speed)
-	print("right speed:", right_speed)
 	
 	#position = mouse_pos - get_viewport_rect().size / 2
