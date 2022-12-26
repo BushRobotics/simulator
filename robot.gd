@@ -144,3 +144,10 @@ func _process(delta):
 		
 		move_by_wheels(left_speed, right_speed)
 	#position = mouse_pos - get_viewport_rect().size / 2
+
+
+func _on_other_side_entered(body):
+	if state == STATES.AUTON and body == self:
+		print("went on other sied")
+		get_parent().show_red()
+	pass # Replace with function body.
