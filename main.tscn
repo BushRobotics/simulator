@@ -51,3 +51,4 @@ position = Vector2( -21, -19 )
 
 [connection signal="body_entered" from="other_side" to="Robot" method="_on_other_side_entered"]
 [connection signal="action" from="Robot" to="action" method="show_action"]
+[connection signal="play_auton" from="UI" to="Robot" method="play_auton"]

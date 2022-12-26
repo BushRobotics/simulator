@@ -25,7 +25,6 @@ func _ready():
 	#auton_to(get_parent().get_node("RIGHT").position)
 	AutonPath.robot = self
 	get_parent().connect("reset", self, "reset_position")
-	pass # Replace with function body.
 	
 func clamp360(angle: float) -> float:
 	return fmod(angle + 360, 360)
@@ -160,7 +159,7 @@ func _process(delta):
 func _on_other_side_entered(body):
 	if state == STATES.AUTON and body == self:
 		get_parent().show_red()
-	pass # Replace with function body.
+
 
 func reset_position():
 	teleport_to(start_position, rad2deg(start_rotation))

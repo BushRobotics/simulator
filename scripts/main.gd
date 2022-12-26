@@ -20,11 +20,9 @@ func _input(event):
 		if not event.pressure > 0:
 			focused_node = 0
 			return
-	else:
-		return
+	else: return
 	
-	if abs(mouse_pos.x) > 73 or abs(mouse_pos.y) > 73:
-		return
+	if abs(mouse_pos.x) > 73 or abs(mouse_pos.y) > 73: return
 
 	var path_index = AutonPath.point_near_global(mouse_pos, 8)
 	if focused_node == 0:

@@ -34,8 +34,15 @@ func point_near_global(point: Vector2, threshold: int) -> int:
 			return i
 	return -1
 
+func set_point(index: int, pos: Vector2):
+	current_path[index].pos = pos
+	emit_signal("path_changed")
+
 func set_point_global(index: int, pos: Vector2):
-	current_path[index].pos = global_to_local(pos)
+	set_point(index, global_to_local(pos))
+
+func remove_point(index: int):
+	current_path.remove(index)
 	emit_signal("path_changed")
 
 # Called when the node enters the scene tree for the first time.
