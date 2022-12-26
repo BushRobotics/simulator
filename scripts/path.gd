@@ -8,6 +8,7 @@ var robot: KinematicBody2D
 signal path_changed
 
 var current_path = []
+var focused_node = 0
 
 func between_points(current_point, point1, point2, threshold) -> bool:
 	var p2dist = point2 - point1
@@ -67,11 +68,15 @@ func get_origin():
 
 func global_to_local(coords: Vector2):
 	var origin = get_origin()
-	coords = coords.rotated(-origin.rot) - origin.pos
+	coords = (coords - origin.pos).rotated(-origin.rot)
 	coords.y *= -1
 	return coords
 
-func add_point(coords: Vector2):
+func set_focused_node(index: int):
+	focused_node = index
+	emit_signal("path_changed")
+
+func add_point(coords: Vector2) -> int:
 	coords = global_to_local(coords)
 	var arr_pos = current_path.size()
 	for i in range(current_path.size()):
@@ -82,15 +87,20 @@ func add_point(coords: Vector2):
 			break
 	current_path.insert(arr_pos, {
 		pos = coords,
-		speed = current_path[-1].speed
+		speed = current_path[-1].speed,
+		action = 0,
+		post_angle = 0
 	})
 	emit_signal("path_changed")
+	return arr_pos
 
 func clear_path():
 	current_path = [
 		{
 			pos = Vector2(0, 0),
-			speed = 30
+			speed = 30,
+			action = 0,
+			post_angle = 0
 		}
 	]
 	emit_signal("path_changed")

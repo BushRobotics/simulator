@@ -25,6 +25,6 @@ func _draw():
 	var points = AutonPath.get_global_path()
 	for i in range(points.size()):
 		points[i].pos -= rect_position
-		draw_circle(points[i].pos, 2, Color.red)
+		draw_circle(points[i].pos, 2, Color.deeppink if i == AutonPath.focused_node else Color.red)
 		if i != 0:
 			draw_line(points[i-1].pos, points[i].pos, Color.red, 1)

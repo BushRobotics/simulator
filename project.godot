@@ -16,7 +16,7 @@ config/icon="res://icon.png"
 
 [autoload]
 
-AutonPath="*res://path.gd"
+AutonPath="*res://scripts/path.gd"
 
 [display]
 

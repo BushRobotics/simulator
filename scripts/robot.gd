@@ -18,6 +18,7 @@ onready var start_position: Vector2 = position
 onready var start_rotation: float = rotation
 var start_speed: float = 0
 
+signal action(index)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -62,6 +63,7 @@ func play_auton():
 	current_auton_index = 0
 	current_auton_path = AutonPath.get_global_path()
 	speed = current_auton_path[0].speed
+	current_auton_path[0].already_rotated = false
 	auton_to(current_auton_path[0].pos)
 
 func move_by_wheels(left: float, right: float):
@@ -111,7 +113,7 @@ func _process(delta):
 	if state == STATES.AUTON: # this is one of the rare moments where the code on the actual robot will be much cleaner than the godot code
 		if auton_state == AUTON.ROTATING:
 			var r = clamp360(-rotation_degrees) # equivalent to imu_get_heading()
-			#print(r)
+
 			if r + 2 > target_angle and r - 2 < target_angle:
 				auton_state = AUTON.MOVING
 				print("rotation done")
@@ -129,12 +131,23 @@ func _process(delta):
 				print("error: ", position - target_location)
 				print("move done")
 				if current_auton_index != -1:
+					if current_auton_path[current_auton_index].post_angle != 0 and not current_auton_path[current_auton_index].already_rotated:
+						target_angle = -current_auton_path[current_auton_index].post_angle - rad2deg(start_rotation)
+						target_angle = clamp360(target_angle)
+						auton_state = AUTON.ROTATING
+						current_auton_path[current_auton_index].already_rotated = true
+						print("post angle: ", target_angle)
+						return
+					
+					if current_auton_path[current_auton_index].action != 0:
+						emit_signal("action", current_auton_path[current_auton_index].action)
 					current_auton_index += 1
 					if current_auton_path.size() == current_auton_index:
 						state = STATES.OP_CONTROL
 						speed = start_speed
 						return
 					speed = current_auton_path[current_auton_index].speed
+					current_auton_path[current_auton_index].already_rotated = false
 					auton_to(current_auton_path[current_auton_index].pos)
 			else:
 				left_speed = 1
@@ -146,9 +159,8 @@ func _process(delta):
 
 func _on_other_side_entered(body):
 	if state == STATES.AUTON and body == self:
-		print("went on other sied")
 		get_parent().show_red()
 	pass # Replace with function body.
 
 func reset_position():
-	teleport_to(start_position, start_rotation)
+	teleport_to(start_position, rad2deg(start_rotation))

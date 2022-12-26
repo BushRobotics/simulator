@@ -5,14 +5,13 @@ extends Node2D
 # var a = 2
 # var b = "text"
 signal reset
-
 var focused_node = 0
-
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.
 
 func _input(event):
+	var mouse_pos = get_global_mouse_position()
 	if event is InputEventMouseButton:
 		if not event.pressed:
 			focused_node = 0
@@ -23,18 +22,22 @@ func _input(event):
 			return
 	else:
 		return
-	#$Robot.teleport_to(get_global_mouse_position())
-	var mouse_pos = get_global_mouse_position()
-	var path_index = AutonPath.point_near_global(mouse_pos, 5)
+	
+	if abs(mouse_pos.x) > 73 or abs(mouse_pos.y) > 73:
+		return
+
+	var path_index = AutonPath.point_near_global(mouse_pos, 8)
 	if focused_node == 0:
 		if path_index == -1:
-			AutonPath.add_point(mouse_pos)
-			focused_node = AutonPath.current_path.size() - 1
+			focused_node = AutonPath.add_point(mouse_pos)
+			AutonPath.set_focused_node(focused_node)
 			return
-	if path_index != -1:
-		focused_node = path_index
-	if focused_node != 0:
-		AutonPath.set_point_global(focused_node, mouse_pos)
+		if path_index != -1:
+			AutonPath.set_focused_node(path_index)
+			focused_node = path_index
+	
+	if focused_node != 0 and event is InputEventMouseMotion:
+		AutonPath.set_point_global(AutonPath.focused_node, mouse_pos)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
