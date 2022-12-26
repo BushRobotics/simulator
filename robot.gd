@@ -28,8 +28,7 @@ func _ready():
 	
 func clamp360(angle: float) -> float:
 	return fmod(angle + 360, 360)
-func vector_within(v: Vector2, t: Vector2, i: int):
-	return v.x + i > t.x and v.y + i > t.y and v.x - i < t.x and v.y - 1 < t.y
+
 
 func teleport_to(pos: Vector2, angle: float = 0):
 	state = STATES.TELEPORTING
@@ -102,7 +101,7 @@ func _process(delta):
 		rotation_degrees = lerp(rotation_degrees, target_angle, 0.4)
 		position = lerp(position, target_location, 0.4)
 		
-		if vector_within(position, target_location, 1) and rotation_degrees + 1 > target_angle and rotation_degrees - 1 < target_angle:
+		if AutonPath.vector_within(position, target_location, 1) and rotation_degrees + 1 > target_angle and rotation_degrees - 1 < target_angle:
 			rotation_degrees = target_angle
 			position = target_location
 			set_collision_layer_bit(0, true)
@@ -124,7 +123,7 @@ func _process(delta):
 					left_speed += 1
 					right_speed -= 1
 		elif auton_state == AUTON.MOVING:
-			if vector_within(position, target_location, 2):
+			if AutonPath.vector_within(position, target_location, 2):
 				print("position: ", position)
 				print("target: ", target_location)
 				print("error: ", position - target_location)
