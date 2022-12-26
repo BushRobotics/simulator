@@ -4,11 +4,6 @@ enum STATES {TELEPORTING, OP_CONTROL, AUTON}
 
 enum AUTON {MOVING, ROTATING}
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
-
-
 var auton_state = AUTON.ROTATING
 var target_angle: float = 0
 var target_location: Vector2 = Vector2(0, 0)
@@ -18,15 +13,17 @@ export(STATES) var state = STATES.OP_CONTROL
 
 # auton variables
 var current_auton_index: int = -1
-var start_position: Vector2 = Vector2(0, 0)
-var start_rotation: float = 0
 var current_auton_path = []
+onready var start_position: Vector2 = position
+onready var start_rotation: float = rotation
 var start_speed: float = 0
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	#auton_to(get_parent().get_node("RIGHT").position)
+	AutonPath.robot = self
+	get_parent().connect("reset", self, "reset_position")
 	pass # Replace with function body.
 	
 func clamp360(angle: float) -> float:
@@ -38,12 +35,12 @@ func teleport_to(pos: Vector2, angle: float = 0):
 	state = STATES.TELEPORTING
 	target_angle = angle
 	target_location = pos
+	set_collision_layer_bit(0, false)
+	set_collision_mask_bit(0, false)
 
 func auton_to(pos: Vector2):
 	state = STATES.AUTON
 	auton_state = AUTON.ROTATING
-	pos.y *= -1
-	pos = pos.rotated(start_rotation) + start_position
 	target_location = pos
 	var distance := (position - pos).length()
 	target_angle = -rotation
@@ -60,11 +57,11 @@ func auton_to(pos: Vector2):
 	print("target position: ", pos)
 
 func play_auton():
+	start_speed = speed
 	start_position = position
 	start_rotation = rotation
 	current_auton_index = 0
-	current_auton_path = AutonPath.get_current_path()
-	start_speed = speed
+	current_auton_path = AutonPath.get_global_path()
 	speed = current_auton_path[0].speed
 	auton_to(current_auton_path[0].pos)
 
@@ -108,6 +105,8 @@ func _process(delta):
 		if vector_within(position, target_location, 1) and rotation_degrees + 1 > target_angle and rotation_degrees - 1 < target_angle:
 			rotation_degrees = target_angle
 			position = target_location
+			set_collision_layer_bit(0, true)
+			set_collision_mask_bit(0, true)
 			state = STATES.OP_CONTROL
 	
 	if state == STATES.AUTON: # this is one of the rare moments where the code on the actual robot will be much cleaner than the godot code
@@ -151,3 +150,6 @@ func _on_other_side_entered(body):
 		print("went on other sied")
 		get_parent().show_red()
 	pass # Replace with function body.
+
+func reset_position():
+	teleport_to(start_position, start_rotation)
