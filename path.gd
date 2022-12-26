@@ -5,24 +5,13 @@ extends Node
 # var a = 2
 # var b = "text"
 var robot: KinematicBody2D
+signal path_changed
 
-var current_path = [
-	{
-		pos = Vector2(0, 0),
-		speed = 30
-	},
-	{
-		pos = Vector2(0, 24),
-		speed = 30
-	},
-	{
-		pos = Vector2(24, 24),
-		speed = 30
-	},
-]
+var current_path = []
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	clear_path()
 	pass # Replace with function body.
 
 func get_global_path():
@@ -46,6 +35,26 @@ func get_origin():
 		rot = robot.rotation
 	}
 
+
+
+func add_point(coords: Vector2):
+	var origin = get_origin()
+	coords = coords.rotated(-origin.rot) - origin.pos
+	coords.y *= -1
+	current_path.append({
+		pos = coords,
+		speed = current_path[-1].speed
+	})
+	emit_signal("path_changed")
+
+func clear_path():
+	current_path = [
+		{
+			pos = Vector2(0, 0),
+			speed = 30
+		}
+	]
+	emit_signal("path_changed")
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass

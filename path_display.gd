@@ -9,6 +9,7 @@ onready var last_origin = AutonPath.get_origin()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	AutonPath.connect("path_changed", self, "update")
 	pass # Replace with function body.
 
 
