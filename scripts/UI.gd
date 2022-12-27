@@ -8,8 +8,10 @@ extends Node2D
 signal play_auton
 signal go_to(side)
 
-signal camera_leave
-signal camera_return
+signal focus_leave
+signal focus_return
+
+var file_path: String
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -59,15 +61,15 @@ func _on_button_press(node: Button):
 			AutonPath.remove_point(i)
 		"clear":
 			$CanvasLayer/Control/ConfirmationDialog.popup()
-			emit_signal("camera_leave")
+			emit_signal("focus_leave")
 		"play":
 			emit_signal("play_auton")
 		"save":
-			emit_signal("camera_leave")
+			emit_signal("focus_leave")
 			$CanvasLayer/Control/FileDialog.mode = 4
 			$CanvasLayer/Control/FileDialog.popup()
 		"load":
-			emit_signal("camera_leave")
+			emit_signal("focus_leave")
 			$CanvasLayer/Control/FileDialog.mode = 0
 			$CanvasLayer/Control/FileDialog.popup()
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -77,13 +79,15 @@ func _on_button_press(node: Button):
 
 func _on_ConfirmationDialog_confirmed():
 	AutonPath.clear_path()
-	emit_signal("camera_return")
+	emit_signal("focus_return")
+
+func _on_FileDialog_popup_hide():
+	emit_signal("focus_return")
 
 func _on_FileDialog_file_selected(path):
 	if $CanvasLayer/Control/FileDialog.mode == 4:
 		AutonPath.save_to(path)
 	else:
 		AutonPath.load_from(path)
-
-func _on_FileDialog_popup_hide():
-	emit_signal("camera_return")
+	emit_signal("focus_return")
+	$CanvasLayer/Control/FileDialog.hide()

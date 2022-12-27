@@ -19,9 +19,7 @@ polygon = PoolVector2Array( -72, -69, 72, 74, 74, 75, 74, -73, -72, -73 )
 visible = false
 color = Color( 0.99, 0.495, 0.495, 1 )
 
-[node name="camera_controller" type="Node2D" parent="."]
-
-[node name="Camera2D" type="Camera2D" parent="camera_controller"]
+[node name="Camera2D" type="Camera2D" parent="."]
 current = true
 zoom = Vector2( 0.27, 0.27 )
 smoothing_enabled = true
@@ -55,7 +53,7 @@ scale = Vector2( 0.6, 0.6 )
 
 [connection signal="body_entered" from="other_side" to="Robot" method="_on_other_side_entered"]
 [connection signal="action" from="Robot" to="action" method="show_action"]
-[connection signal="camera_leave" from="UI" to="." method="_on_UI_camera_leave"]
-[connection signal="camera_return" from="UI" to="." method="_on_UI_camera_return"]
+[connection signal="focus_leave" from="UI" to="." method="_on_UI_focus_leave"]
+[connection signal="focus_return" from="UI" to="." method="_on_UI_focus_return"]
 [connection signal="go_to" from="UI" to="." method="robot_to"]
 [connection signal="play_auton" from="UI" to="Robot" method="play_auton"]

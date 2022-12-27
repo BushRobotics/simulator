@@ -7,12 +7,16 @@ extends Node2D
 signal reset
 var focused_node = 0
 var play_next = false
+
+var focus = true
+var return_focus = false
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	robot_to("LEFT")
 	pass # Replace with function body.
 
 func _input(event):
+	if not focus: return
 	var mouse_pos = get_global_mouse_position()
 	if event is InputEventMouseButton:
 		if not event.pressed:
@@ -54,6 +58,10 @@ func _process(delta):
 		hide_red()
 		emit_signal("reset")
 		play_next = true
+	
+	if return_focus:
+		focus = true
+		return_focus = false
 
 
 func show_red():
@@ -68,10 +76,10 @@ func robot_to(side: String):
 	$Robot.teleport_to(side_node.position, side_node.rotation_degrees)
 
 
-func _on_UI_camera_leave():
+func _on_UI_focus_leave():
 	var size := get_viewport().size
-	$camera_controller.position = size * -0.5
+	focus = false
 
 
-func _on_UI_camera_return():
-	$camera_controller.position = Vector2(0, 0)
+func _on_UI_focus_return():
+	return_focus = true

@@ -117,10 +117,38 @@ func save_to(fname):
 	print("saving path to", fname)
 	var data = ""
 	
+	for point in current_path:
+		data += str(point.pos.x) + " "
+		data += str(point.pos.y) + " "
+		data += str(point.speed) + " "
+		data += str(point.action) + " "
+		if point.post_angle != null:
+			data += str(point.post_angle)
+		else:
+			data += "N"
+		data += "	"
 	var file = File.new()
 	file.open(fname, File.WRITE)
 	file.store_string(data)
 	file.close()
 
 func load_from(fname):
-	return
+	current_path = []
+	focused_node = 0
+	var file = File.new()
+	file.open(fname, File.READ)
+	var data = file.get_as_text()
+	file.close()
+	
+	for p in data.split("	", false):
+		p = p.split(" ")
+		var point = {
+			post_angle = null
+		}
+		point.pos = Vector2(float(p[0]), float(p[1]))
+		point.speed = int(p[2])
+		point.action = int(p[3])
+		if p[4] != "N":
+			point.post_angle = int(p[4])
+		current_path.append(point)
+	emit_signal("path_changed")	
