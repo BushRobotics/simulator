@@ -126,7 +126,7 @@ func save_to(fname):
 			data += str(point.post_angle)
 		else:
 			data += "N"
-		data += "	"
+		data += "\n"
 	var file = File.new()
 	file.open(fname, File.WRITE)
 	file.store_string(data)
@@ -140,7 +140,7 @@ func load_from(fname):
 	var data = file.get_as_text()
 	file.close()
 	
-	for p in data.split("	", false):
+	for p in data.split("\n", false):
 		p = p.split(" ")
 		var point = {
 			post_angle = null
