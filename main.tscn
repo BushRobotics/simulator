@@ -56,4 +56,5 @@ scale = Vector2( 0.6, 0.6 )
 [connection signal="focus_leave" from="UI" to="." method="_on_UI_focus_leave"]
 [connection signal="focus_return" from="UI" to="." method="_on_UI_focus_return"]
 [connection signal="go_to" from="UI" to="." method="robot_to"]
+[connection signal="play_auton" from="UI" to="." method="hide_red"]
 [connection signal="play_auton" from="UI" to="Robot" method="play_auton"]

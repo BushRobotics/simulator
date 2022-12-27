@@ -62,7 +62,7 @@ func auton_to(pos: Vector2):
 func play_auton():
 	position = start_position
 	rotation = start_rotation
-	old_state = state if state != STATES.TELEPORTING else old_state
+	old_state = state if state != STATES.TELEPORTING and state != STATES.AUTON else STATES.IDLE
 	set_collision_layer_bit(0, true)
 	set_collision_mask_bit(0, true)
 	start_speed = speed
