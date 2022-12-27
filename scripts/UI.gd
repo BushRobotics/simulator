@@ -26,11 +26,15 @@ func _on_path_changed():
 	get_tree().get_nodes_in_group("title")[0].text = "pont " + str(i)
 	for node in get_tree().get_nodes_in_group("numbers"):
 		var val = AutonPath.current_path[i]
+		var p = node.caret_position
 		for s in node.name.split("->"):
 			val = val[s]
 		node.text = str(val)
+		node.caret_position = p
 
 func _on_text_changed(new_text, node_name):
+	if new_text == "":
+		return
 	var i = AutonPath.focused_node
 	if i != 0:
 		if node_name == "pos->x":
