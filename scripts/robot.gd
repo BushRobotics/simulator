@@ -76,7 +76,7 @@ func move_by_wheels(left: float, right: float):
 	left /= 10
 	right /= 10
 	var move_speed = (left + right) / 2
-	var theta = asin(left - right) / 100 * speed
+	var theta = asin(left - right) / ($Icon.scale.x * 400) * speed
 	rotation += theta
 	move_and_slide(Vector2(0, move_speed).rotated(rotation) * -10 * speed)
 
@@ -126,7 +126,7 @@ func _process(delta):
 				auton_state = AUTON.MOVING
 				print("rotation done")
 			else:
-				if clamp360(r - target_angle) > 180:
+				if clamp360(r - target_angle) > 178:
 					left_speed -= 1
 					right_speed += 1
 				else:
