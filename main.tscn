@@ -19,17 +19,21 @@ polygon = PoolVector2Array( -72, -69, 72, 74, 74, 75, 74, -73, -72, -73 )
 visible = false
 color = Color( 0.99, 0.495, 0.495, 1 )
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="camera_controller" type="Node2D" parent="."]
+
+[node name="Camera2D" type="Camera2D" parent="camera_controller"]
 current = true
 zoom = Vector2( 0.27, 0.27 )
+smoothing_enabled = true
+smoothing_speed = 3.5
 
 [node name="Field" parent="." instance=ExtResource( 1 )]
 
 [node name="LEFT" type="Position2D" parent="."]
-position = Vector2( 12, 63 )
+position = Vector2( 16, 63 )
 
 [node name="RIGHT" type="Position2D" parent="."]
-position = Vector2( -62, -36 )
+position = Vector2( -63, -39 )
 rotation = 1.5708
 
 [node name="path_display" type="ColorRect" parent="."]
@@ -41,16 +45,17 @@ color = Color( 1, 1, 1, 0 )
 script = ExtResource( 5 )
 
 [node name="Robot" parent="." instance=ExtResource( 2 )]
-position = Vector2( 12, 63 )
 state = 3
+
+[node name="UI" parent="." instance=ExtResource( 6 )]
 
 [node name="action" parent="." instance=ExtResource( 4 )]
 visible = false
 scale = Vector2( 0.6, 0.6 )
 
-[node name="UI" parent="." instance=ExtResource( 6 )]
-
 [connection signal="body_entered" from="other_side" to="Robot" method="_on_other_side_entered"]
 [connection signal="action" from="Robot" to="action" method="show_action"]
+[connection signal="camera_leave" from="UI" to="." method="_on_UI_camera_leave"]
+[connection signal="camera_return" from="UI" to="." method="_on_UI_camera_return"]
 [connection signal="go_to" from="UI" to="." method="robot_to"]
 [connection signal="play_auton" from="UI" to="Robot" method="play_auton"]

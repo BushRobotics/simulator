@@ -66,3 +66,12 @@ func robot_to(side: String):
 	var side_node: Position2D = get_node_or_null(side)
 	if side_node == null: return
 	$Robot.teleport_to(side_node.position, side_node.rotation_degrees)
+
+
+func _on_UI_camera_leave():
+	var size := get_viewport().size
+	$camera_controller.position = size * -0.5
+
+
+func _on_UI_camera_return():
+	$camera_controller.position = Vector2(0, 0)

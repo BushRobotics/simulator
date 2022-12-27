@@ -42,6 +42,10 @@ func set_point_global(index: int, pos: Vector2):
 	set_point(index, global_to_local(pos))
 
 func remove_point(index: int):
+	if index == 0:
+		return
+	if index == focused_node:
+		focused_node -= 1
 	current_path.remove(index)
 	emit_signal("path_changed")
 
@@ -106,7 +110,17 @@ func clear_path():
 			post_angle = null
 		}
 	]
+	focused_node = 0
 	emit_signal("path_changed")
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+
+func save_to(fname):
+	print("saving path to", fname)
+	var data = ""
+	
+	var file = File.new()
+	file.open(fname, File.WRITE)
+	file.store_string(data)
+	file.close()
+
+func load_from(fname):
+	return
