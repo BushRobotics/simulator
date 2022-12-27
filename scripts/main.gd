@@ -6,8 +6,10 @@ extends Node2D
 # var b = "text"
 signal reset
 var focused_node = 0
+var play_next = false
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	robot_to("LEFT")
 	pass # Replace with function body.
 
 func _input(event):
@@ -39,9 +41,19 @@ func _input(event):
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	if play_next:
+		play_next = false
+		$Robot.play_auton()
+		return
+
 	if Input.is_action_just_pressed("ui_cancel"):
 		hide_red()
 		emit_signal("reset")
+	
+	if Input.is_action_just_pressed("space"):
+		hide_red()
+		emit_signal("reset")
+		play_next = true
 
 
 func show_red():
@@ -49,3 +61,8 @@ func show_red():
 
 func hide_red():
 	$other_side/modulate.hide()
+
+func robot_to(side: String):
+	var side_node: Position2D = get_node_or_null(side)
+	if side_node == null: return
+	$Robot.teleport_to(side_node.position, side_node.rotation_degrees)

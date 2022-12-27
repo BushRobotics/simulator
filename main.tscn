@@ -29,7 +29,7 @@ zoom = Vector2( 0.27, 0.27 )
 position = Vector2( 12, 63 )
 
 [node name="RIGHT" type="Position2D" parent="."]
-position = Vector2( -63, -36 )
+position = Vector2( -62, -36 )
 rotation = 1.5708
 
 [node name="path_display" type="ColorRect" parent="."]
@@ -42,13 +42,15 @@ script = ExtResource( 5 )
 
 [node name="Robot" parent="." instance=ExtResource( 2 )]
 position = Vector2( 12, 63 )
+state = 3
 
 [node name="action" parent="." instance=ExtResource( 4 )]
 visible = false
-position = Vector2( -21, -19 )
+scale = Vector2( 0.6, 0.6 )
 
 [node name="UI" parent="." instance=ExtResource( 6 )]
 
 [connection signal="body_entered" from="other_side" to="Robot" method="_on_other_side_entered"]
 [connection signal="action" from="Robot" to="action" method="show_action"]
+[connection signal="go_to" from="UI" to="." method="robot_to"]
 [connection signal="play_auton" from="UI" to="Robot" method="play_auton"]

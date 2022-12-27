@@ -25,7 +25,7 @@ func between_points(current_point, point1, point2, threshold) -> bool:
 	return on_line and between_y and between_x
 
 func vector_within(v: Vector2, t: Vector2, i: int):
-	return v.x + i > t.x and v.y + i > t.y and v.x - i < t.x and v.y - 1 < t.y
+	return (v - t).length() <= i
 
 func point_near_global(point: Vector2, threshold: int) -> int:
 	point = global_to_local(point)
@@ -63,14 +63,10 @@ func get_global_path():
 func get_origin():
 	if not robot:
 		return {pos = Vector2(0, 0), rot = 0}
-	if robot.state == robot.STATES.AUTON:
-		return {
-			pos = robot.start_position,
-			rot = robot.start_rotation
-		}
+
 	return {
-		pos = robot.position,
-		rot = robot.rotation
+		pos = robot.start_position,
+		rot = robot.start_rotation
 	}
 
 func global_to_local(coords: Vector2):
@@ -96,7 +92,7 @@ func add_point(coords: Vector2) -> int:
 		pos = coords,
 		speed = current_path[-1].speed,
 		action = 0,
-		post_angle = 0
+		post_angle = null
 	})
 	emit_signal("path_changed")
 	return arr_pos
@@ -107,7 +103,7 @@ func clear_path():
 			pos = Vector2(0, 0),
 			speed = 30,
 			action = 0,
-			post_angle = 0
+			post_angle = null
 		}
 	]
 	emit_signal("path_changed")
