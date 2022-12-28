@@ -6,9 +6,12 @@ enum AUTON {MOVING, ROTATING}
 
 var auton_state = AUTON.ROTATING
 var target_angle: float = 0
+var target_angle_direction: int = 1
 var target_location: Vector2 = Vector2(0, 0)
 
 export var speed: float = 30 # inches per second
+var robot_width = 16 # width in inches
+
 export(STATES) var state = STATES.OP_CONTROL
 
 # auton variables
@@ -20,6 +23,7 @@ var start_speed: float = 0
 
 var old_state = state
 
+
 signal action(index)
 
 # Called when the node enters the scene tree for the first time.
@@ -27,10 +31,9 @@ func _ready():
 	#auton_to(get_parent().get_node("RIGHT").position)
 	AutonPath.robot = self
 	get_parent().connect("reset", self, "reset_position")
-	
-func clamp360(angle: float) -> float:
-	return fmod(angle + 360, 360)
 
+func direction_to(r, angle):
+	return 1 if AutonPath.clamp360(r - angle) >= 180 else - 1
 
 func teleport_to(pos: Vector2, angle: float = 0):
 	old_state = state
@@ -53,9 +56,10 @@ func auton_to(pos: Vector2):
 		target_angle *= -1
 		print("added 180")
 		target_angle += 180
-	target_angle = clamp360(target_angle)
+	target_angle = AutonPath.clamp360(target_angle)
 	target_angle = floor(target_angle)
-	print("current angle: ", clamp360(rotation_degrees))
+	direction_to(AutonPath.clamp360(-rotation_degrees), target_angle)
+	print("current angle: ", AutonPath.clamp360(rotation_degrees))
 	print("target angle: ", target_angle)
 	print("target position: ", pos)
 
@@ -76,7 +80,7 @@ func move_by_wheels(left: float, right: float):
 	left /= 10
 	right /= 10
 	var move_speed = (left + right) / 2
-	var theta = asin(left - right) / ($Icon.scale.x * 400) * speed
+	var theta = asin(left - right) / (robot_width * 6.25) * speed
 	rotation += theta
 	move_and_slide(Vector2(0, move_speed).rotated(rotation) * -10 * speed)
 
@@ -120,26 +124,22 @@ func _process(delta):
 	
 	if state == STATES.AUTON: # this is one of the rare moments where the code on the actual robot will be much cleaner than the godot code
 		if auton_state == AUTON.ROTATING:
-			var r = clamp360(-rotation_degrees) # equivalent to imu_get_heading()
-
+			var r = AutonPath.clamp360(-rotation_degrees) # equivalent to imu_get_heading()
 			if r + 2 > target_angle and r - 2 < target_angle:
 				auton_state = AUTON.MOVING
 				print("rotation done")
 			else:
-				if clamp360(r - target_angle) > 178:
-					left_speed -= 1
-					right_speed += 1
-				else:
-					left_speed += 1
-					right_speed -= 1
+				left_speed -= target_angle_direction
+				right_speed += target_angle_direction
 		elif auton_state == AUTON.MOVING:
 			if AutonPath.vector_within(position, target_location, 2) or current_auton_path[current_auton_index].already_rotated:
 				print("move done!")
 				if current_auton_index != -1:
 					if current_auton_path[current_auton_index].post_angle != null and not current_auton_path[current_auton_index].already_rotated:
 						target_angle = -current_auton_path[current_auton_index].post_angle - rad2deg(start_rotation)
-						target_angle = clamp360(target_angle)
+						target_angle = AutonPath.clamp360(target_angle)
 						target_angle = floor(target_angle)
+						target_angle_direction = direction_to(AutonPath.clamp360(-rotation_degrees), target_angle)
 						auton_state = AUTON.ROTATING
 						current_auton_path[current_auton_index].already_rotated = true
 						print("post angle: ", target_angle)

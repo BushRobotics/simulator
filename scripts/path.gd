@@ -27,6 +27,11 @@ func between_points(current_point, point1, point2, threshold) -> bool:
 func vector_within(v: Vector2, t: Vector2, i: int):
 	return (v - t).length() <= i
 
+func clamp360(angle: int) -> int:
+	while angle > 360 or angle < 0:
+		angle = (angle + 360) % 360
+	return angle
+
 func point_near_global(point: Vector2, threshold: int) -> int:
 	point = global_to_local(point)
 	for i in range(current_path.size()):
@@ -123,7 +128,7 @@ func save_to(fname):
 		data += str(point.speed) + " "
 		data += str(point.action) + " "
 		if point.post_angle != null:
-			data += str(point.post_angle)
+			data += str(clamp360(point.post_angle))
 		else:
 			data += "N"
 		data += "\n"
