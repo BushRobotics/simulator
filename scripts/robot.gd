@@ -33,7 +33,7 @@ func _ready():
 	get_parent().connect("reset", self, "reset_position")
 
 func direction_to(r, angle):
-	return 1 if AutonPath.clamp360(r - angle) >= 180 else - 1
+	return -1 if AutonPath.clamp360(r - angle) >= 180 else 1
 
 func teleport_to(pos: Vector2, angle: float = 0):
 	old_state = state
@@ -125,7 +125,7 @@ func _process(delta):
 	if state == STATES.AUTON: # this is one of the rare moments where the code on the actual robot will be much cleaner than the godot code
 		if auton_state == AUTON.ROTATING:
 			var r = AutonPath.clamp360(-rotation_degrees) # equivalent to imu_get_heading()
-			if r + 2 > target_angle and r - 2 < target_angle:
+			if r + 2 >= target_angle and r - 2 <= target_angle:
 				auton_state = AUTON.MOVING
 				print("rotation done")
 			else:
