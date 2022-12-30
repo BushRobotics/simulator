@@ -32,8 +32,14 @@ func _ready():
 	AutonPath.robot = self
 	get_parent().connect("reset", self, "reset_position")
 
-func direction_to(r, angle):
-	return -1 if AutonPath.clamp360(r - angle) >= 180 else 1
+func direction_to(c: int, t: int) -> int:
+	c = AutonPath.clamp360(c) as int
+	t = AutonPath.clamp360(t) as int
+	var a = c - t
+	var s = 1 if a >= 0 else -1
+	if abs(a) > 180:
+		return 1 * s
+	return -1 * s
 
 func teleport_to(pos: Vector2, angle: float = 0):
 	old_state = state
@@ -48,17 +54,17 @@ func auton_to(pos: Vector2):
 	auton_state = AUTON.ROTATING
 	target_location = pos
 	var distance := (position - pos).length()
-	target_angle = -rotation
+	target_angle = rotation
 	if distance != 0:
 		target_angle = asin((position.x - pos.x) / distance)
-	target_angle = rad2deg(target_angle)
+	target_angle = rad2deg(-target_angle)
 	if (position - pos).y < 0:
 		target_angle *= -1
 		print("added 180")
 		target_angle += 180
 	target_angle = AutonPath.clamp360(target_angle)
 	target_angle = floor(target_angle)
-	direction_to(AutonPath.clamp360(-rotation_degrees), target_angle)
+	target_angle_direction = direction_to(rotation_degrees, target_angle)
 	print("current angle: ", AutonPath.clamp360(rotation_degrees))
 	print("target angle: ", target_angle)
 	print("target position: ", pos)
@@ -124,22 +130,22 @@ func _process(delta):
 	
 	if state == STATES.AUTON: # this is one of the rare moments where the code on the actual robot will be much cleaner than the godot code
 		if auton_state == AUTON.ROTATING:
-			var r = AutonPath.clamp360(-rotation_degrees) # equivalent to imu_get_heading()
+			var r = AutonPath.clamp360(rotation_degrees) # equivalent to imu_get_heading()
 			if r + 2 >= target_angle and r - 2 <= target_angle:
 				auton_state = AUTON.MOVING
 				print("rotation done")
 			else:
-				left_speed -= target_angle_direction
-				right_speed += target_angle_direction
+				left_speed += target_angle_direction
+				right_speed -= target_angle_direction
 		elif auton_state == AUTON.MOVING:
 			if AutonPath.vector_within(position, target_location, 2) or current_auton_path[current_auton_index].already_rotated:
 				print("move done!")
 				if current_auton_index != -1:
 					if current_auton_path[current_auton_index].post_angle != null and not current_auton_path[current_auton_index].already_rotated:
-						target_angle = -current_auton_path[current_auton_index].post_angle - rad2deg(start_rotation)
+						target_angle = current_auton_path[current_auton_index].post_angle + rad2deg(start_rotation)
 						target_angle = AutonPath.clamp360(target_angle)
 						target_angle = floor(target_angle)
-						target_angle_direction = direction_to(AutonPath.clamp360(-rotation_degrees), target_angle)
+						target_angle_direction = direction_to(rotation_degrees, target_angle)
 						auton_state = AUTON.ROTATING
 						current_auton_path[current_auton_index].already_rotated = true
 						print("post angle: ", target_angle)
