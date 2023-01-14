@@ -32,7 +32,7 @@ position = Vector2( 16, 63 )
 
 [node name="RIGHT" type="Position2D" parent="."]
 position = Vector2( -63, -39 )
-rotation = 1.5708
+rotation = 3.14159
 
 [node name="path_display" type="ColorRect" parent="."]
 margin_left = -72.0

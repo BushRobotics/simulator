@@ -10,7 +10,7 @@ var target_angle_direction: int = 1
 var target_location: Vector2 = Vector2(0, 0)
 
 export var speed: float = 30 # inches per second
-var robot_width = 16 # width in inches
+var robot_width = 17.25 # width in inches
 
 export(STATES) var state = STATES.OP_CONTROL
 
