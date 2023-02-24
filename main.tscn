@@ -10,20 +10,20 @@
 [node name="main" type="Node2D"]
 script = ExtResource( 3 )
 
-[node name="other_side" type="Area2D" parent="."]
-
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="other_side"]
-polygon = PoolVector2Array( -72, -69, 72, 74, 74, 75, 74, -73, -72, -73 )
-
-[node name="modulate" type="CanvasModulate" parent="other_side"]
-visible = false
-color = Color( 0.99, 0.495, 0.495, 1 )
-
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
 zoom = Vector2( 0.27, 0.27 )
 smoothing_enabled = true
 smoothing_speed = 3.5
+
+[node name="other_side" type="Area2D" parent="."]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="other_side"]
+polygon = PoolVector2Array( 73, 71, 74, -73, -70, -72 )
+
+[node name="modulate" type="CanvasModulate" parent="other_side"]
+visible = false
+color = Color( 0.99, 0.495, 0.495, 1 )
 
 [node name="Field" parent="." instance=ExtResource( 1 )]
 
