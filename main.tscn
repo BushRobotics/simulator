@@ -43,7 +43,7 @@ color = Color( 1, 1, 1, 0 )
 script = ExtResource( 5 )
 
 [node name="Robot" parent="." instance=ExtResource( 2 )]
-state = 3
+state = 0
 
 [node name="UI" parent="." instance=ExtResource( 6 )]
 
@@ -53,8 +53,3 @@ scale = Vector2( 0.6, 0.6 )
 
 [connection signal="body_entered" from="other_side" to="Robot" method="_on_other_side_entered"]
 [connection signal="action" from="Robot" to="action" method="show_action"]
-[connection signal="focus_leave" from="UI" to="." method="_on_UI_focus_leave"]
-[connection signal="focus_return" from="UI" to="." method="_on_UI_focus_return"]
-[connection signal="go_to" from="UI" to="." method="robot_to"]
-[connection signal="play_auton" from="UI" to="." method="hide_red"]
-[connection signal="play_auton" from="UI" to="Robot" method="play_auton"]

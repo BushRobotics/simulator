@@ -3,210 +3,138 @@
 [ext_resource path="res://theme.tres" type="Theme" id=1]
 [ext_resource path="res://scripts/UI.gd" type="Script" id=2]
 
-[node name="UI" type="Node2D"]
-script = ExtResource( 2 )
+[node name="CanvasLayer" type="CanvasLayer"]
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
-
-[node name="Control" type="Control" parent="CanvasLayer"]
+[node name="Control" type="Control" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 theme = ExtResource( 1 )
+script = ExtResource( 2 )
+file_dialog_path = NodePath("FileDialog")
+confirmation_dialog_path = NodePath("ConfirmationDialog")
 
-[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/Control"]
-anchor_left = 1.0
-anchor_top = 0.5
+[node name="PanelContainer" type="PanelContainer" parent="Control"]
+anchor_left = 0.846
 anchor_right = 1.0
-anchor_bottom = 0.5
-margin_left = -200.0
-margin_top = -300.0
-margin_bottom = 300.0
+anchor_bottom = 1.0
+margin_left = -0.304016
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Control/PanelContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/PanelContainer"]
 margin_left = 7.0
 margin_top = 7.0
-margin_right = 193.0
+margin_right = 151.0
 margin_bottom = 593.0
 
-[node name="Label" type="Label" parent="CanvasLayer/Control/PanelContainer/VBoxContainer" groups=["title"]]
-margin_right = 186.0
+[node name="Label" type="Label" parent="Control/PanelContainer/VBoxContainer" groups=["title"]]
+margin_right = 144.0
 margin_bottom = 28.0
 text = "point 0"
 align = 1
 
-[node name="HSeparator" type="HSeparator" parent="CanvasLayer/Control/PanelContainer/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="Control/PanelContainer/VBoxContainer"]
 margin_top = 32.0
-margin_right = 186.0
+margin_right = 144.0
 margin_bottom = 36.0
 size_flags_horizontal = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Control/PanelContainer/VBoxContainer"]
+[node name="pos->x" type="SpinBox" parent="Control/PanelContainer/VBoxContainer" groups=["numbers"]]
 margin_top = 40.0
-margin_right = 186.0
+margin_right = 144.0
 margin_bottom = 78.0
+prefix = "X:"
 
-[node name="Label" type="Label" parent="CanvasLayer/Control/PanelContainer/VBoxContainer/HBoxContainer"]
-margin_top = 5.0
-margin_right = 112.0
-margin_bottom = 33.0
-size_flags_horizontal = 3
-text = "x "
-align = 2
-
-[node name="pos->x" type="LineEdit" parent="CanvasLayer/Control/PanelContainer/VBoxContainer/HBoxContainer" groups=["numbers"]]
-margin_left = 116.0
-margin_right = 186.0
-margin_bottom = 38.0
-text = "0"
-align = 2
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/Control/PanelContainer/VBoxContainer"]
+[node name="pos->y" type="SpinBox" parent="Control/PanelContainer/VBoxContainer" groups=["numbers"]]
 margin_top = 82.0
-margin_right = 186.0
+margin_right = 144.0
 margin_bottom = 120.0
+prefix = "Y:"
 
-[node name="Label" type="Label" parent="CanvasLayer/Control/PanelContainer/VBoxContainer/HBoxContainer2"]
-margin_top = 5.0
-margin_right = 112.0
-margin_bottom = 33.0
-size_flags_horizontal = 3
-text = "y "
-align = 2
-
-[node name="pos->y" type="LineEdit" parent="CanvasLayer/Control/PanelContainer/VBoxContainer/HBoxContainer2" groups=["numbers"]]
-margin_left = 116.0
-margin_right = 186.0
-margin_bottom = 38.0
-text = "0"
-align = 2
-
-[node name="HBoxContainer3" type="HBoxContainer" parent="CanvasLayer/Control/PanelContainer/VBoxContainer"]
+[node name="speed" type="SpinBox" parent="Control/PanelContainer/VBoxContainer" groups=["numbers"]]
 margin_top = 124.0
-margin_right = 186.0
+margin_right = 144.0
 margin_bottom = 162.0
+prefix = "Speed:"
 
-[node name="Label" type="Label" parent="CanvasLayer/Control/PanelContainer/VBoxContainer/HBoxContainer3"]
-margin_top = 5.0
-margin_right = 112.0
-margin_bottom = 33.0
-size_flags_horizontal = 3
-text = "speed "
-align = 2
-
-[node name="speed" type="LineEdit" parent="CanvasLayer/Control/PanelContainer/VBoxContainer/HBoxContainer3" groups=["numbers"]]
-margin_left = 116.0
-margin_right = 186.0
-margin_bottom = 38.0
-text = "30"
-align = 2
-
-[node name="HBoxContainer4" type="HBoxContainer" parent="CanvasLayer/Control/PanelContainer/VBoxContainer"]
+[node name="post_angle" type="SpinBox" parent="Control/PanelContainer/VBoxContainer" groups=["numbers"]]
 margin_top = 166.0
-margin_right = 186.0
+margin_right = 144.0
 margin_bottom = 204.0
+prefix = "Angle:"
 
-[node name="Label" type="Label" parent="CanvasLayer/Control/PanelContainer/VBoxContainer/HBoxContainer4"]
-margin_top = 5.0
-margin_right = 112.0
-margin_bottom = 33.0
-size_flags_horizontal = 3
-text = "angle "
-align = 2
-
-[node name="post_angle" type="LineEdit" parent="CanvasLayer/Control/PanelContainer/VBoxContainer/HBoxContainer4" groups=["numbers"]]
-margin_left = 116.0
-margin_right = 186.0
-margin_bottom = 38.0
-text = "0"
-align = 2
-
-[node name="HBoxContainer5" type="HBoxContainer" parent="CanvasLayer/Control/PanelContainer/VBoxContainer"]
+[node name="action" type="SpinBox" parent="Control/PanelContainer/VBoxContainer" groups=["numbers"]]
 margin_top = 208.0
-margin_right = 186.0
+margin_right = 144.0
 margin_bottom = 246.0
+prefix = "Action:"
 
-[node name="Label" type="Label" parent="CanvasLayer/Control/PanelContainer/VBoxContainer/HBoxContainer5"]
-margin_top = 5.0
-margin_right = 112.0
-margin_bottom = 33.0
-size_flags_horizontal = 3
-text = "action "
-align = 2
-
-[node name="action" type="LineEdit" parent="CanvasLayer/Control/PanelContainer/VBoxContainer/HBoxContainer5" groups=["numbers"]]
-margin_left = 116.0
-margin_right = 186.0
-margin_bottom = 38.0
-text = "0"
-align = 2
-
-[node name="Button" type="Button" parent="CanvasLayer/Control/PanelContainer/VBoxContainer" groups=["buttons"]]
+[node name="Button" type="Button" parent="Control/PanelContainer/VBoxContainer" groups=["buttons"]]
 margin_top = 250.0
-margin_right = 186.0
+margin_right = 144.0
 margin_bottom = 284.0
 text = "delete node"
 
-[node name="HSeparator2" type="HSeparator" parent="CanvasLayer/Control/PanelContainer/VBoxContainer"]
+[node name="HSeparator2" type="HSeparator" parent="Control/PanelContainer/VBoxContainer"]
 margin_top = 288.0
-margin_right = 186.0
+margin_right = 144.0
 margin_bottom = 292.0
 
-[node name="HBoxContainer6" type="HBoxContainer" parent="CanvasLayer/Control/PanelContainer/VBoxContainer"]
+[node name="HBoxContainer6" type="HBoxContainer" parent="Control/PanelContainer/VBoxContainer"]
 margin_top = 296.0
-margin_right = 186.0
+margin_right = 144.0
 margin_bottom = 330.0
 
-[node name="Button5" type="Button" parent="CanvasLayer/Control/PanelContainer/VBoxContainer/HBoxContainer6" groups=["buttons"]]
-margin_right = 91.0
+[node name="Button5" type="Button" parent="Control/PanelContainer/VBoxContainer/HBoxContainer6" groups=["buttons"]]
+margin_right = 70.0
 margin_bottom = 34.0
 size_flags_horizontal = 3
 text = "LEFT"
 
-[node name="Button6" type="Button" parent="CanvasLayer/Control/PanelContainer/VBoxContainer/HBoxContainer6" groups=["buttons"]]
-margin_left = 95.0
-margin_right = 186.0
+[node name="Button6" type="Button" parent="Control/PanelContainer/VBoxContainer/HBoxContainer6" groups=["buttons"]]
+margin_left = 74.0
+margin_right = 144.0
 margin_bottom = 34.0
 size_flags_horizontal = 3
 text = "RIGHT"
 
-[node name="Button2" type="Button" parent="CanvasLayer/Control/PanelContainer/VBoxContainer" groups=["buttons"]]
+[node name="Button2" type="Button" parent="Control/PanelContainer/VBoxContainer" groups=["buttons"]]
 margin_top = 334.0
-margin_right = 186.0
+margin_right = 144.0
 margin_bottom = 368.0
 text = "play"
 
-[node name="HSeparator3" type="HSeparator" parent="CanvasLayer/Control/PanelContainer/VBoxContainer"]
+[node name="HSeparator3" type="HSeparator" parent="Control/PanelContainer/VBoxContainer"]
 margin_top = 372.0
-margin_right = 186.0
+margin_right = 144.0
 margin_bottom = 376.0
 
-[node name="Button3" type="Button" parent="CanvasLayer/Control/PanelContainer/VBoxContainer" groups=["buttons"]]
+[node name="Button3" type="Button" parent="Control/PanelContainer/VBoxContainer" groups=["buttons"]]
 margin_top = 380.0
-margin_right = 186.0
+margin_right = 144.0
 margin_bottom = 414.0
 text = "clear"
 
-[node name="Button4" type="Button" parent="CanvasLayer/Control/PanelContainer/VBoxContainer" groups=["buttons"]]
+[node name="Button4" type="Button" parent="Control/PanelContainer/VBoxContainer" groups=["buttons"]]
 margin_top = 418.0
-margin_right = 186.0
+margin_right = 144.0
 margin_bottom = 452.0
 text = "save"
 
-[node name="Button5" type="Button" parent="CanvasLayer/Control/PanelContainer/VBoxContainer" groups=["buttons"]]
+[node name="Button5" type="Button" parent="Control/PanelContainer/VBoxContainer" groups=["buttons"]]
 margin_top = 456.0
-margin_right = 186.0
+margin_right = 144.0
 margin_bottom = 490.0
 text = "load"
 
-[node name="FileDialog" type="FileDialog" parent="CanvasLayer/Control"]
+[node name="FileDialog" type="FileDialog" parent="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+rect_min_size = Vector2( 250, 87.5 )
 popup_exclusive = true
 resizable = true
 access = 2
 
-[node name="ConfirmationDialog" type="ConfirmationDialog" parent="CanvasLayer/Control"]
+[node name="ConfirmationDialog" type="ConfirmationDialog" parent="Control"]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -215,10 +143,6 @@ margin_left = -220.0
 margin_top = -43.0
 margin_right = 220.0
 margin_bottom = 43.0
+rect_min_size = Vector2( 250, 87.5 )
 window_title = "on nyao!"
 dialog_text = "Are you sure you want to delete this path?"
-
-[connection signal="file_selected" from="CanvasLayer/Control/FileDialog" to="." method="_on_FileDialog_file_selected"]
-[connection signal="popup_hide" from="CanvasLayer/Control/FileDialog" to="." method="_on_FileDialog_popup_hide"]
-[connection signal="confirmed" from="CanvasLayer/Control/ConfirmationDialog" to="." method="_on_ConfirmationDialog_confirmed"]
-[connection signal="popup_hide" from="CanvasLayer/Control/ConfirmationDialog" to="." method="_on_FileDialog_popup_hide"]
