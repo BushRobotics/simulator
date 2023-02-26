@@ -1,15 +1,14 @@
 extends CanvasLayer
 
-
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
-
+export var angle_null_button_path : NodePath
+onready var angle_null_button : CheckBox = get_node(angle_null_button_path)
 
 export var file_dialog_path : NodePath
 onready var file_dialog : FileDialog = get_node(file_dialog_path)
+
 export var confirmation_dialog_path : NodePath
 onready var confirmation_dialog: ConfirmationDialog = get_node(confirmation_dialog_path)
+
 signal play_auton
 signal go_to(side)
 
@@ -22,7 +21,7 @@ func _ready() -> void:
 	file_dialog.connect("file_selected",self,"file_dialog_file_selected")
 	file_dialog.connect("popup_hide",self,"file_dialog_popup_hide")
 	confirmation_dialog.connect("confirmed",self,"confirmation_dialog_confirmed")
-	
+
 	AutonPath.connect("path_changed", self, "_on_path_changed")
 	for node in get_tree().get_nodes_in_group("numbers"):
 		node.connect("value_changed", self, "_on_text_changed", [node.name])
