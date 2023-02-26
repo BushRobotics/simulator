@@ -9,6 +9,9 @@ onready var file_dialog : FileDialog = get_node(file_dialog_path)
 export var confirmation_dialog_path : NodePath
 onready var confirmation_dialog: ConfirmationDialog = get_node(confirmation_dialog_path)
 
+export var post_angle_path : NodePath
+onready var post_angle_box : SpinBox = get_node(post_angle_path)
+
 signal play_auton
 signal go_to(side)
 
@@ -24,39 +27,47 @@ func _ready() -> void:
 
 	AutonPath.connect("path_changed", self, "_on_path_changed")
 	for node in get_tree().get_nodes_in_group("numbers"):
-		node.connect("value_changed", self, "_on_text_changed", [node.name])
+		var line_edit: LineEdit = node.get_line_edit()
+		node.connect("value_changed", self, "_on_text_changed", [node, line_edit])
+		line_edit.connect("text_changed", self, "_on_text_changed", [node, line_edit])
 
 	for node in get_tree().get_nodes_in_group("buttons"):
 		node.connect("pressed", self, "_on_button_press", [node])
 
 func _on_path_changed() -> void:
 	var i = AutonPath.focused_node
-	get_tree().get_nodes_in_group("title")[0].text = "pont " + str(i)
+	get_tree().get_nodes_in_group("title")[0].text = "point " + str(i)
 	for node in get_tree().get_nodes_in_group("numbers"):
 		var val = AutonPath.current_path[i]
 #		var p = node.line_edit.caret_position
 		for s in node.name.split("->"):
 			val = val[s]
 		if val == null:
-			return
-		node.value = val
-#		node.caret_position = p
+			node.value = 0
+		else:
+			node.value = val
+	angle_null_button.set_pressed_no_signal(AutonPath.current_path[i].post_angle != null)
 
-func _on_text_changed(new_text, node_name):
-	#if new_text == :
-#		return
+	
+
+func _on_text_changed(new_text, node: SpinBox, line_edit: LineEdit):
+	var caret = line_edit.get_cursor_position()
+	node.apply()
+	line_edit.set_cursor_position(caret)
 	var i = AutonPath.focused_node
 	if i != 0:
-		if node_name == "pos->x":
-			AutonPath.set_point(i, Vector2(float(new_text), AutonPath.current_path[i].pos.y))
-		elif node_name == "pos->y":
-			AutonPath.set_point(i, Vector2(AutonPath.current_path[i].pos.x, float(new_text)))
+		if node.name == "pos->x":
+			AutonPath.set_point(i, Vector2(float(node.value), AutonPath.current_path[i].pos.y))
+			return
+		elif node.name == "pos->y":
+			AutonPath.set_point(i, Vector2(AutonPath.current_path[i].pos.x, float(node.value)))
+			return
 	
-	#if new_text.to_upper() == "NULL":
-	#	AutonPath.current_path[i][node_name] = null
-	#	return
-	
-	AutonPath.current_path[i][node_name] = int(new_text)
+	if node.name == "post_angle" and not angle_null_button.pressed:
+		angle_null_button.set_pressed_no_signal(true)
+		return
+
+	AutonPath.current_path[i][node.name] = int(node.value)
 
 func _on_button_press(node: Button) -> void:
 	var i = AutonPath.focused_node
@@ -80,6 +91,11 @@ func _on_button_press(node: Button) -> void:
 			emit_signal("focus_leave")
 			file_dialog.mode = FileDialog.MODE_OPEN_FILE
 			file_dialog.popup()
+		"null":
+			if angle_null_button.pressed:
+				AutonPath.current_path[i].post_angle = post_angle_box.value
+			else:
+				AutonPath.current_path[i].post_angle = null
 
 func confirmation_dialog_confirmed() -> void:
 	AutonPath.clear_path()

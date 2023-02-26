@@ -5,8 +5,10 @@
 
 [node name="CanvasLayer" type="CanvasLayer"]
 script = ExtResource( 2 )
+angle_null_button_path = NodePath("Control/PanelContainer/VBoxContainer/HBoxContainer/null")
 file_dialog_path = NodePath("Control/FileDialog")
 confirmation_dialog_path = NodePath("Control/ConfirmationDialog")
+post_angle_path = NodePath("Control/PanelContainer/VBoxContainer/HBoxContainer/post_angle")
 
 [node name="Control" type="Control" parent="."]
 anchor_right = 1.0
@@ -42,14 +44,16 @@ size_flags_horizontal = 3
 margin_top = 40.0
 margin_right = 144.0
 margin_bottom = 78.0
-min_value = -100.0
+min_value = -500.0
+max_value = 500.0
 prefix = "X:"
 
 [node name="pos->y" type="SpinBox" parent="Control/PanelContainer/VBoxContainer" groups=["numbers"]]
 margin_top = 82.0
 margin_right = 144.0
 margin_bottom = 120.0
-min_value = -100.0
+min_value = -500.0
+max_value = 500.0
 prefix = "Y:"
 
 [node name="speed" type="SpinBox" parent="Control/PanelContainer/VBoxContainer" groups=["numbers"]]
@@ -57,6 +61,7 @@ margin_top = 124.0
 margin_right = 144.0
 margin_bottom = 162.0
 min_value = -100.0
+step = 0.0
 prefix = "Speed:"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Control/PanelContainer/VBoxContainer"]
@@ -64,23 +69,28 @@ margin_top = 166.0
 margin_right = 144.0
 margin_bottom = 204.0
 
-[node name="post_angle" type="SpinBox" parent="Control/PanelContainer/VBoxContainer/HBoxContainer" groups=["numbers"]]
-margin_right = 116.0
+[node name="null" type="CheckBox" parent="Control/PanelContainer/VBoxContainer/HBoxContainer" groups=["buttons"]]
+margin_right = 28.0
 margin_bottom = 38.0
-size_flags_horizontal = 3
-min_value = -100.0
-prefix = "Angle:"
+size_flags_horizontal = 0
+keep_pressed_outside = true
+text = "null"
+flat = true
+clip_text = true
 
-[node name="null" type="CheckBox" parent="Control/PanelContainer/VBoxContainer/HBoxContainer"]
-margin_left = 120.0
+[node name="post_angle" type="SpinBox" parent="Control/PanelContainer/VBoxContainer/HBoxContainer" groups=["numbers"]]
+margin_left = 32.0
 margin_right = 144.0
 margin_bottom = 38.0
+size_flags_horizontal = 3
+min_value = -360.0
+max_value = 360.0
+prefix = "Angle:"
 
 [node name="action" type="SpinBox" parent="Control/PanelContainer/VBoxContainer" groups=["numbers"]]
 margin_top = 208.0
 margin_right = 144.0
 margin_bottom = 246.0
-min_value = -100.0
 prefix = "Action:"
 
 [node name="Button" type="Button" parent="Control/PanelContainer/VBoxContainer" groups=["buttons"]]
