@@ -25,7 +25,7 @@ func _ready() -> void:
 	
 	AutonPath.connect("path_changed", self, "_on_path_changed")
 	for node in get_tree().get_nodes_in_group("numbers"):
-		node.connect("text_changed", self, "_on_text_changed", [node.name])
+		node.connect("value_changed", self, "_on_text_changed", [node.name])
 
 	for node in get_tree().get_nodes_in_group("buttons"):
 		node.connect("pressed", self, "_on_button_press", [node])
@@ -44,8 +44,8 @@ func _on_path_changed() -> void:
 #		node.caret_position = p
 
 func _on_text_changed(new_text, node_name):
-	if new_text == "":
-		return
+	#if new_text == :
+#		return
 	var i = AutonPath.focused_node
 	if i != 0:
 		if node_name == "pos->x":
@@ -53,11 +53,11 @@ func _on_text_changed(new_text, node_name):
 		elif node_name == "pos->y":
 			AutonPath.set_point(i, Vector2(AutonPath.current_path[i].pos.x, float(new_text)))
 	
-	if new_text.to_upper() == "NULL":
-		AutonPath.current_path[i][node_name] = null
-		return
+	#if new_text.to_upper() == "NULL":
+	#	AutonPath.current_path[i][node_name] = null
+	#	return
 	
-	AutonPath.current_path[i][node_name] = new_text as int
+	AutonPath.current_path[i][node_name] = int(new_text)
 
 func _on_button_press(node: Button) -> void:
 	var i = AutonPath.focused_node
