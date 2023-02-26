@@ -4,15 +4,15 @@
 [ext_resource path="res://scripts/UI.gd" type="Script" id=2]
 
 [node name="CanvasLayer" type="CanvasLayer"]
+script = ExtResource( 2 )
+file_dialog_path = NodePath("Control/FileDialog")
+confirmation_dialog_path = NodePath("Control/ConfirmationDialog")
 
 [node name="Control" type="Control" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 theme = ExtResource( 1 )
-script = ExtResource( 2 )
-file_dialog_path = NodePath("FileDialog")
-confirmation_dialog_path = NodePath("ConfirmationDialog")
 
 [node name="PanelContainer" type="PanelContainer" parent="Control"]
 anchor_left = 0.846
@@ -42,30 +42,35 @@ size_flags_horizontal = 3
 margin_top = 40.0
 margin_right = 144.0
 margin_bottom = 78.0
+min_value = -100.0
 prefix = "X:"
 
 [node name="pos->y" type="SpinBox" parent="Control/PanelContainer/VBoxContainer" groups=["numbers"]]
 margin_top = 82.0
 margin_right = 144.0
 margin_bottom = 120.0
+min_value = -100.0
 prefix = "Y:"
 
 [node name="speed" type="SpinBox" parent="Control/PanelContainer/VBoxContainer" groups=["numbers"]]
 margin_top = 124.0
 margin_right = 144.0
 margin_bottom = 162.0
+min_value = -100.0
 prefix = "Speed:"
 
 [node name="post_angle" type="SpinBox" parent="Control/PanelContainer/VBoxContainer" groups=["numbers"]]
 margin_top = 166.0
 margin_right = 144.0
 margin_bottom = 204.0
+min_value = -100.0
 prefix = "Angle:"
 
 [node name="action" type="SpinBox" parent="Control/PanelContainer/VBoxContainer" groups=["numbers"]]
 margin_top = 208.0
 margin_right = 144.0
 margin_bottom = 246.0
+min_value = -100.0
 prefix = "Action:"
 
 [node name="Button" type="Button" parent="Control/PanelContainer/VBoxContainer" groups=["buttons"]]

@@ -53,3 +53,6 @@ scale = Vector2( 0.6, 0.6 )
 
 [connection signal="body_entered" from="other_side" to="Robot" method="_on_other_side_entered"]
 [connection signal="action" from="Robot" to="action" method="show_action"]
+[connection signal="focus_leave" from="UI" to="." method="_on_UI_focus_leave"]
+[connection signal="focus_return" from="UI" to="." method="_on_UI_focus_return"]
+[connection signal="play_auton" from="UI" to="Robot" method="play_auton"]

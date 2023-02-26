@@ -63,7 +63,6 @@ func _process(delta):
 		focus = true
 		return_focus = false
 
-
 func show_red():
 	$other_side/modulate.show()
 
