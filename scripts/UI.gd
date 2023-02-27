@@ -48,8 +48,6 @@ func _on_path_changed() -> void:
 			node.value = val
 	angle_null_button.set_pressed_no_signal(AutonPath.current_path[i].post_angle != null)
 
-	
-
 func _on_text_changed(new_text, node: SpinBox, line_edit: LineEdit):
 	var caret = line_edit.get_cursor_position()
 	node.apply()

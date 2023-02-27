@@ -8,6 +8,7 @@ var auton_state = AUTON.ROTATING
 var target_angle: float = 0
 var target_angle_direction: int = 1
 var target_location: Vector2 = Vector2(0, 0)
+var target_direction: int = 1
 
 export var speed: float = 30 # inches per second
 var robot_width = 17.25 # width in inches
@@ -41,6 +42,10 @@ func direction_to(c: int, t: int) -> int:
 		return 1 * s
 	return -1 * s
 
+func angle_distance(a, b):
+	var w = AutonPath.clamp360(a - b)
+	return abs(min(360 - w, w))
+
 func teleport_to(pos: Vector2, angle: float = 0):
 	old_state = state
 	state = STATES.TELEPORTING
@@ -55,6 +60,7 @@ func auton_to(pos: Vector2):
 	target_location = pos
 	var distance := (position - pos).length()
 	target_angle = rotation
+	target_direction = 1
 	if distance != 0:
 		target_angle = asin((position.x - pos.x) / distance)
 	target_angle = rad2deg(-target_angle)
@@ -64,6 +70,10 @@ func auton_to(pos: Vector2):
 		target_angle += 180
 	target_angle = AutonPath.clamp360(target_angle)
 	target_angle = floor(target_angle)
+	if angle_distance(rotation_degrees, target_angle) > angle_distance(rotation_degrees, target_angle + 180):
+		print("target angle is ", target_angle)
+		target_angle = AutonPath.clamp360(target_angle + 180)
+		target_direction = -1
 	target_angle_direction = direction_to(rotation_degrees, target_angle)
 	print("current angle: ", AutonPath.clamp360(rotation_degrees))
 	print("target angle: ", target_angle)
@@ -162,8 +172,8 @@ func _process(delta):
 					current_auton_path[current_auton_index].already_rotated = false
 					auton_to(current_auton_path[current_auton_index].pos)
 			else:
-				left_speed = 1
-				right_speed = 1
+				left_speed = target_direction
+				right_speed = target_direction
 		
 		move_by_wheels(left_speed, right_speed)
 	#position = mouse_pos - get_viewport_rect().size / 2
