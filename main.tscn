@@ -19,7 +19,7 @@ smoothing_speed = 3.5
 [node name="other_side" type="Area2D" parent="."]
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="other_side"]
-polygon = PoolVector2Array( 73, 71, 74, -73, -70, -72 )
+polygon = PoolVector2Array( 74, 1, 74, -73, -70, -72, -71, 1 )
 
 [node name="modulate" type="CanvasModulate" parent="other_side"]
 visible = false
@@ -28,11 +28,10 @@ color = Color( 0.99, 0.495, 0.495, 1 )
 [node name="Field" parent="." instance=ExtResource( 1 )]
 
 [node name="LEFT" type="Position2D" parent="."]
-position = Vector2( 16, 63 )
+position = Vector2( -44, 63 )
 
 [node name="RIGHT" type="Position2D" parent="."]
-position = Vector2( -63, -39 )
-rotation = 3.14159
+position = Vector2( 36, 63 )
 
 [node name="path_display" type="ColorRect" parent="."]
 margin_left = -72.0
@@ -43,6 +42,7 @@ color = Color( 1, 1, 1, 0 )
 script = ExtResource( 5 )
 
 [node name="Robot" parent="." instance=ExtResource( 2 )]
+position = Vector2( 36, 36 )
 state = 0
 
 [node name="UI" parent="." instance=ExtResource( 6 )]
@@ -55,4 +55,5 @@ scale = Vector2( 0.6, 0.6 )
 [connection signal="action" from="Robot" to="action" method="show_action"]
 [connection signal="focus_leave" from="UI" to="." method="_on_UI_focus_leave"]
 [connection signal="focus_return" from="UI" to="." method="_on_UI_focus_return"]
+[connection signal="go_to" from="UI" to="." method="robot_to"]
 [connection signal="play_auton" from="UI" to="Robot" method="play_auton"]
